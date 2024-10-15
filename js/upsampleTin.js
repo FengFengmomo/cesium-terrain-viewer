@@ -33,52 +33,52 @@ export class UpSampleTin {
     splitALL(){
         let geometry = this.geometry;
         this.spliteGeometry(geometry, true, this.xAixs, true);
-        this.up = this.constructGeometry();
+        this.up = this.constructGeometry(); // 大于X
         this.spliteGeometry(geometry, true, this.xAixs, false);
-        this.down = this.constructGeometry();
-        this.spliteGeometry(geometry, false, this.yAixs, true);
-        this.left = this.constructGeometry();
+        this.down = this.constructGeometry(); // 小于X
         this.spliteGeometry(geometry, false, this.yAixs, false);
-        this.right = this.constructGeometry();
+        this.left = this.constructGeometry();   // 大于Y
+        this.spliteGeometry(geometry, false, this.yAixs, true);
+        this.right = this.constructGeometry();  // 小于Y
 
         // 取四个角的点
         this.spliteGeometry(this.up, false, this.yAixs, true);
-        this.upRight = this.constructGeometry();
-        this.spliteGeometry(this.up, false, this.yAixs, false);
-        this.upLeft = this.constructGeometry();
-        this.spliteGeometry(this.down, false, this.yAixs, true);
         this.downRight = this.constructGeometry();
-        this.spliteGeometry(this.down, false, this.yAixs, false);
+        this.spliteGeometry(this.up, false, this.yAixs, false);
+        this.upRight = this.constructGeometry();
+        this.spliteGeometry(this.down, false, this.yAixs, true);
         this.downLeft = this.constructGeometry();
+        this.spliteGeometry(this.down, false, this.yAixs, false);
+        this.upLeft = this.constructGeometry();
     }
 
     getGeometry(postion) {
         let geometry = this.geometry;
         if (postion ===0) {
-            this.spliteGeometry(geometry, true, this.xAixs, true);
-            this.up = this.constructGeometry();
-            this.spliteGeometry(this.up, false, this.yAixs, false);
+            this.spliteGeometry(geometry, true, this.xAixs, false);
+            this.down = this.constructGeometry(); // 小于X
+            this.spliteGeometry(this.down, false, this.yAixs, false);
             this.upLeft = this.constructGeometry();
             return this.upLeft;
         }
         if (postion === 1) {
             this.spliteGeometry(geometry, true, this.xAixs, true);
             this.up = this.constructGeometry();
-            this.spliteGeometry(this.up, false, this.yAixs, true);
+            this.spliteGeometry(this.up, false, this.yAixs, false);
             this.upRight = this.constructGeometry();
             return this.upRight;
         }
         if (postion === 2) {
             this.spliteGeometry(geometry, true, this.xAixs, false);
             this.down = this.constructGeometry();
-            this.spliteGeometry(this.down, false, this.yAixs, false);
+            this.spliteGeometry(this.down, false, this.yAixs, true);
             this.downLeft = this.constructGeometry();
             return this.downLeft;
         }
         if (postion === 3) {
-            this.spliteGeometry(geometry, true, this.xAixs, false);
-            this.down = this.constructGeometry();
-            this.spliteGeometry(this.down, false, this.yAixs, true);
+            this.spliteGeometry(geometry, true, this.xAixs, true);
+            this.up = this.constructGeometry();
+            this.spliteGeometry(this.up, false, this.yAixs, true);
             this.downRight = this.constructGeometry();
             return this.downRight;
         }

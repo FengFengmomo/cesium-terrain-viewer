@@ -79,7 +79,10 @@
 
 			const light1 = new THREE.AmbientLight( 0x404040 ); // soft white light
 			scene.add( light1 );
-
+			const axesHelper = new THREE.AxesHelper( 6371008*2);
+			// 红、绿、蓝
+			axesHelper.setColors(new THREE.Color("#ff0000"), new THREE.Color("#00ff00"), new THREE.Color("#0000ff"));
+			scene.add( axesHelper );
 
 			let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ODA0MzRlZi0xNDQzLTRlNzctOTdmNC04MzFiMTZmYzk0MTEiLCJpZCI6MjQ0MTc0LCJpYXQiOjE3MjczMTYxNjd9.AVCxxaF0nYQh8jD7Zi0mW1ytdzNHV5GwnFKJcPPjw-I";
 			let access_token = "";
@@ -128,7 +131,7 @@
 
 					let sam = new UpSampleTin(geometry);
 					sam.splitALL();
-					// console.log(result);
+					console.log("top left: ", sam.upLeft);
 
 					let newMesh = new THREE.Mesh(sam.up, tmaterial);
 					newMesh.position.set(1,0,0);
@@ -144,44 +147,44 @@
 					addWireframe(newMesh);
 					scene.add(newMesh);
 
-					newMesh = new THREE.Mesh(sam.left, tmaterial);
+					newMesh = new THREE.Mesh(sam.left, tmaterial); // 这里的left为z的负轴方向
+					newMesh.position.set(0,0,-1); 
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					newMesh = new THREE.Mesh(sam.right, tmaterial); // 这里的right为z的正轴方向
 					newMesh.position.set(0,0,1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
 					scene.add(newMesh);
 
-					newMesh = new THREE.Mesh(sam.right, tmaterial);
-					newMesh.position.set(0,0,-1);
+					newMesh = new THREE.Mesh(sam.getGeometry(0), tmaterial);
+					newMesh.position.set(-1,0,-1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
 					scene.add(newMesh);
+
 
 					newMesh = new THREE.Mesh(sam.getGeometry(1), tmaterial);
-					newMesh.position.set(1,0,1);
-					newMesh.updateMatrix();
-					newMesh.updateMatrixWorld(true);
-					addWireframe(newMesh);
-					scene.add(newMesh);
-
-					newMesh = new THREE.Mesh(sam.getGeometry(0), tmaterial);
 					newMesh.position.set(1,0,-1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
 					scene.add(newMesh);
 
-
-					newMesh = new THREE.Mesh(sam.getGeometry(3), tmaterial);
+					newMesh = new THREE.Mesh(sam.getGeometry(2), tmaterial);
 					newMesh.position.set(-1,0,1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
 					scene.add(newMesh);
 
-					newMesh = new THREE.Mesh(sam.getGeometry(2), tmaterial);
-					newMesh.position.set(-1,0,-1);
+					newMesh = new THREE.Mesh(sam.getGeometry(3), tmaterial);
+					newMesh.position.set(1,0,1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
