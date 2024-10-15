@@ -161,6 +161,7 @@
 					addWireframe(newMesh);
 					scene.add(newMesh);
 
+					
 					newMesh = new THREE.Mesh(sam.getGeometry(0), tmaterial);
 					newMesh.position.set(-1,0,-1);
 					newMesh.updateMatrix();
@@ -185,6 +186,43 @@
 
 					newMesh = new THREE.Mesh(sam.getGeometry(3), tmaterial);
 					newMesh.position.set(1,0,1);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					let topLeft = sam.getGeometry(0);
+					sam.scale(topLeft, 0); // 放缩回原来的级别
+					let topRight = sam.getGeometry(1);
+					sam.scale(topRight, 1);
+					let bottomLeft = sam.getGeometry(2);
+					sam.scale(bottomLeft, 2);
+					let bottomRight = sam.getGeometry(3);
+					sam.scale(bottomRight, 3);
+
+					newMesh = new THREE.Mesh(topLeft, tmaterial);
+					newMesh.position.set(-2,0,-2);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					newMesh = new THREE.Mesh(topRight, tmaterial);
+					newMesh.position.set(2,0,-2);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					newMesh = new THREE.Mesh(bottomLeft, tmaterial);
+					newMesh.position.set(-2,0,2);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					newMesh = new THREE.Mesh(bottomRight, tmaterial);
+					newMesh.position.set(2,0,2);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);

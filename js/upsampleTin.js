@@ -83,6 +83,36 @@ export class UpSampleTin {
             return this.downRight;
         }
     }
+
+     // 放缩到原来的水平，xz:[-0.5,0.5]
+     scale(geometry, position){
+        let xAixs = 0, yAixs = 0;
+        if (position === 0) {
+            xAixs = 0.25; // x轴向正向移动0.25
+            yAixs = 0.25; // y轴向负向移动0.25
+        }
+        if (position === 1) {
+            xAixs = -0.25; // x轴向正向移动0.25
+            yAixs = 0.25; // y轴向正向移动0.25
+        }
+        if (position === 2) {
+            xAixs = 0.25; // x轴向负向移动0.25
+            yAixs = -0.25; // y轴向负向移动0.25
+        }
+        if (position === 3) {
+            xAixs = -0.25; // x轴向负向移动0.25
+            yAixs = -0.25; // y轴向正向移动0.25
+        }
+        let pos = geometry.getAttribute('position');
+        for (let i = 0; i < pos.count; i++) {
+            let point = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
+            point.x += xAixs;
+            point.z += yAixs;
+            point.x*=2
+            point.z*=2
+            pos.setXYZ(i, point.x, point.y, point.z);
+        }
+    }
     /**
      * 
      * @param {*} geometry 
