@@ -1,5 +1,21 @@
 import * as THREE from '../build/three.module.js';
 
+/**
+ * 该几何体分割主要用于不规则三角形几何体的分割
+ * 坐标点的范围确定在x: [-0.5, 0.5], z:[-0.5,0.5] 之间, y 用来表示高程
+ * -0.5       top          0.5
+ * __ __ __ __ __ __ __ __
+ * |          |           |
+ * |          |           |
+ * |          |           |
+ * |__________|___________|   X  right
+ * |          |           |
+ * |          |           |
+ * |          |           |
+ * |__________|___________|
+ * -0.5                    0.5
+ *            Z
+ */
 export class UpSampleTin {
 
     FRONT = 'front';
@@ -7,15 +23,65 @@ export class UpSampleTin {
     ON = 'on';
 
     constructor(geometry, xAixs = 0, yAixs = 0) {
-        this.spliteGeometry(geometry, true, xAixs, true);
-        this.up = this.constructGeometry();
-        this.spliteGeometry(geometry, true, xAixs, false)
-        this.down = this.constructGeometry();
-        this.spliteGeometry(geometry, false, yAixs, true);
-        this.left = this.constructGeometry();
-        this.spliteGeometry(geometry, false, yAixs, false);
-        this.right = this.constructGeometry();
+        this.geometry = geometry;
+        this.xAixs = xAixs;
+        this.yAixs = yAixs;
         
+        
+    }
+
+    splitALL(){
+        let geometry = this.geometry;
+        this.spliteGeometry(geometry, true, this.xAixs, true);
+        this.up = this.constructGeometry();
+        this.spliteGeometry(geometry, true, this.xAixs, false);
+        this.down = this.constructGeometry();
+        this.spliteGeometry(geometry, false, this.yAixs, true);
+        this.left = this.constructGeometry();
+        this.spliteGeometry(geometry, false, this.yAixs, false);
+        this.right = this.constructGeometry();
+
+        // 取四个角的点
+        this.spliteGeometry(this.up, false, this.yAixs, true);
+        this.upRight = this.constructGeometry();
+        this.spliteGeometry(this.up, false, this.yAixs, false);
+        this.upLeft = this.constructGeometry();
+        this.spliteGeometry(this.down, false, this.yAixs, true);
+        this.downRight = this.constructGeometry();
+        this.spliteGeometry(this.down, false, this.yAixs, false);
+        this.downLeft = this.constructGeometry();
+    }
+
+    getGeometry(postion) {
+        let geometry = this.geometry;
+        if (postion ===0) {
+            this.spliteGeometry(geometry, true, this.xAixs, true);
+            this.up = this.constructGeometry();
+            this.spliteGeometry(this.up, false, this.yAixs, false);
+            this.upLeft = this.constructGeometry();
+            return this.upLeft;
+        }
+        if (postion === 1) {
+            this.spliteGeometry(geometry, true, this.xAixs, true);
+            this.up = this.constructGeometry();
+            this.spliteGeometry(this.up, false, this.yAixs, true);
+            this.upRight = this.constructGeometry();
+            return this.upRight;
+        }
+        if (postion === 2) {
+            this.spliteGeometry(geometry, true, this.xAixs, false);
+            this.down = this.constructGeometry();
+            this.spliteGeometry(this.down, false, this.yAixs, false);
+            this.downLeft = this.constructGeometry();
+            return this.downLeft;
+        }
+        if (postion === 3) {
+            this.spliteGeometry(geometry, true, this.xAixs, false);
+            this.down = this.constructGeometry();
+            this.spliteGeometry(this.down, false, this.yAixs, true);
+            this.downRight = this.constructGeometry();
+            return this.downRight;
+        }
     }
     /**
      * 
@@ -29,7 +95,9 @@ export class UpSampleTin {
         let distances = []; // 计算每个点到线的距离
         let positions = []; // 计算每个点在线的哪一侧
         let pos = geometry.getAttribute('position');
-        for (let i = 0; i < pos.count; i++) {
+        let vertexCount = geometry.userData.terrain.vertexCount;
+        // for (let i = 0; i < pos.count; i++) {
+        for (let i = 0; i < vertexCount; i++) {
             let point = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
             var distance = xAixs? (point.x - line) : (point.z - line);
             var position = this.distanceAsPosition(distance, big);
@@ -89,7 +157,8 @@ export class UpSampleTin {
         let header = this.builder.sourceGeometry.userData.terrain.header; // 获取原始地形头信息
         let vertexData = {
             vertexCount: geometry.vertices.length/3,
-            vertex: geometry.vertices
+            vertex: geometry.vertices,
+            sliced: true
         }
         let indexData = {
             triangleCount: geometry.index.length, // 有多少个三角形就是多少个 三角形*3的个数的索引
@@ -146,12 +215,7 @@ export class UpSampleTin {
         let newGeometry = new sliceGeometry(terrain);
         return newGeometry;
     }
-    getResult(){
-        return this.up;
-        // geometry.index;
-        // geometry.vertices;
-        // return this.builder.targetGeometry;
-    }
+
 
     /**
      * 计算在直线的上下方
@@ -375,14 +439,6 @@ class sliceGeometry  extends THREE.BufferGeometry{
 			normals.push(0, 1, 0); // 这里法向量是朝上的，所以是(0, 1, 0)； Y轴朝上，所以这样写
 			uvs.push(x+0.5, 0.5-z); // 这里写成uvs.push(xarr[i]/32767, 1.0-yarr[i]/32767); 也是可以的，前面的就是按照这个方式的一种简化。
 		}
-		// let triangleCount = indicesData.triangleCount;
-		// let indexs = indicesData.indices;
-		// for (let i = 0; i < triangleCount; i+=3) {
-		//     let index0 = indexs[i];
-		//     let index1 = indexs[i+1];
-		//     let index2 = indexs[i+2];
-		//     indices.push(index0, index1, index2);
-		// }
 		indices.push(...indicesData.indices);
 	}
     

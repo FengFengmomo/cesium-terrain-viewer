@@ -129,10 +129,10 @@
 					// quantizedTerrainUpSample(geometry);
 
 					let sam = new UpSampleTin(geometry);
-					let result = sam.getResult();
-					console.log(result);
+					sam.splitALL();
+					// console.log(result);
 
-					let newMesh = new THREE.Mesh(result, tmaterial);
+					let newMesh = new THREE.Mesh(sam.up, tmaterial);
 					newMesh.position.set(1,0,0);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
@@ -155,6 +155,35 @@
 
 					newMesh = new THREE.Mesh(sam.right, tmaterial);
 					newMesh.position.set(0,0,-1);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					newMesh = new THREE.Mesh(sam.getGeometry(1), tmaterial);
+					newMesh.position.set(1,0,1);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					newMesh = new THREE.Mesh(sam.getGeometry(0), tmaterial);
+					newMesh.position.set(1,0,-1);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+
+					newMesh = new THREE.Mesh(sam.getGeometry(3), tmaterial);
+					newMesh.position.set(-1,0,1);
+					newMesh.updateMatrix();
+					newMesh.updateMatrixWorld(true);
+					addWireframe(newMesh);
+					scene.add(newMesh);
+
+					newMesh = new THREE.Mesh(sam.getGeometry(2), tmaterial);
+					newMesh.position.set(-1,0,-1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
