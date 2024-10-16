@@ -360,6 +360,9 @@ class Builder {
         if (indices.length === 0) {
             return;
         }
+        if  (indices.length < 3) { // 这步处理的原因在于， 三角形只有一个顶点在该分界线上，或者只有一条边在该分界线上，这种情况不做处理
+            return;
+        }
         if (indices.length === 3) {
             this.addFacePart(indices[0], indices[1], indices[2]);
             return;

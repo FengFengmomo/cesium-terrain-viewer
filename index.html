@@ -94,9 +94,12 @@
 			let mesh;
 			let url = './data/725.terrain';
 			let input = document.getElementById('url');
+			let group = new THREE.Group();
+			scene.add(group);
 			input.addEventListener('change', function(data) {
 			    url = input.value;
-				scene.remove(mesh);
+				// scene.remove(mesh);
+				group.clear();
 				init();
 			})
 			// init();
@@ -126,7 +129,7 @@
 					mesh.updateMatrixWorld(true);
 					addWireframe(mesh);
 					console.log(mesh);
-					scene.add( mesh );
+					group.add( mesh );
 					// quantizedTerrainUpSample(geometry);
 
 					let sam = new UpSampleTin(geometry);
@@ -138,28 +141,28 @@
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(sam.down, tmaterial);
 					newMesh.position.set(-1,0,0);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(sam.left, tmaterial); // 这里的left为z的负轴方向
 					newMesh.position.set(0,0,-1); 
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(sam.right, tmaterial); // 这里的right为z的正轴方向
 					newMesh.position.set(0,0,1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					
 					newMesh = new THREE.Mesh(sam.getGeometry(0), tmaterial);
@@ -167,7 +170,7 @@
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 
 					newMesh = new THREE.Mesh(sam.getGeometry(1), tmaterial);
@@ -175,21 +178,21 @@
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(sam.getGeometry(2), tmaterial);
 					newMesh.position.set(-1,0,1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(sam.getGeometry(3), tmaterial);
 					newMesh.position.set(1,0,1);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					let topLeft = sam.getGeometry(0);
 					sam.scale(topLeft, 0); // 放缩回原来的级别
@@ -205,28 +208,28 @@
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(topRight, tmaterial);
 					newMesh.position.set(2,0,-2);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(bottomLeft, tmaterial);
 					newMesh.position.set(-2,0,2);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 
 					newMesh = new THREE.Mesh(bottomRight, tmaterial);
 					newMesh.position.set(2,0,2);
 					newMesh.updateMatrix();
 					newMesh.updateMatrixWorld(true);
 					addWireframe(newMesh);
-					scene.add(newMesh);
+					group.add(newMesh);
 					// var plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 					// var geom = new THREE.BoxGeometry(1, 1, 1);
 					// geom = sliceGeometry(geom, plane);
